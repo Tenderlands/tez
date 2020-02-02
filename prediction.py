@@ -65,6 +65,7 @@ model = RandomForestRegressor(n_estimators=150, random_state=0)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=1 / 5, random_state=10)
 model.fit(X_train, y_train)
 
+
 def plotKM_train():
     filename = os.path.join(os.getcwd(), 'graphs', 'km_train.png')
     if os.path.exists(filename):
@@ -73,6 +74,7 @@ def plotKM_train():
     df1 = pd.DataFrame(X_train, dtype='float64')
     v1 = df1.iloc[:,6].values
     fig = plt.figure(figsize=(8,6))
+    plt.rcParams.update({'font.size': 14})
     plt.scatter(v1,y_train, color='magenta')
     plt.title('Kilometre Değerine Göre Fiyat(Eğitim Verisi Tablosu)')
     plt.xlabel('KM')
@@ -89,6 +91,7 @@ def plotKM_test():
     df1 = pd.DataFrame(X_test, dtype='float64')
     v1 = df1.iloc[:,6].values
     fig = plt.figure(figsize=(8,6))
+    plt.rcParams.update({'font.size': 14})
     plt.scatter(v1,y_test, color='blue')
     plt.title('Kilometre Değerine Göre Fiyat(Test Verisi Tablosu)')
     plt.xlabel('KM')
@@ -103,7 +106,11 @@ def plotYakit():
         if time.time()-os.path.getmtime(filename) < 300:
             return
     graph = df[:]
+    df.drop(df.loc[df.Motor_Hacmi.isnull()].index, inplace=True)
+    graph.drop(graph.loc[graph.Yakıt == 'Elektrik'].index, inplace=True)
+    graph.drop(graph.loc[graph.Yakıt == 'Hybrid'].index, inplace=True)
     fig = plt.figure(figsize=(8,6))
+    plt.rcParams.update({'font.size': 16})
     plt.title("Yakıt Çeşitlenmesi")
     graph.groupby('Yakıt').Yakıt.count().plot(kind='pie')
     FigureCanvasAgg(fig).print_png(filename)
@@ -116,6 +123,7 @@ def plotAvgKM():
         if time.time()-os.path.getmtime(filename) < 300:
             return
     fig = plt.figure(figsize=(8,6))
+    plt.rcParams.update({'font.size': 16})
     df[:].groupby('Marka').KM.mean().plot(kind='bar')
     plt.title("Araba markalarına göre ortalama KM değerleri")
     plt.xlabel('Markalar')
@@ -130,6 +138,7 @@ def plotRenk():
         if time.time()-os.path.getmtime(filename) < 300:
             return
     fig = plt.figure(figsize=(8,6))
+    plt.rcParams.update({'font.size': 16})
     df[:].groupby('Renk').Renk.count().plot(kind='bar')
     plt.title("Arabaların Renk Dağılımı")
     plt.xlabel('Renk')
@@ -147,8 +156,9 @@ def plotMotor():
     df['Motor_Hacmi'] = pd.to_numeric(df['Motor_Hacmi'], downcast='integer')
     df["Guc_Hacim"] = (df["Motor_Gucu"] / df["Motor_Hacmi"])
     fig = plt.figure(figsize=(32,24))
+    plt.rcParams.update({'font.size': 16})
     df[:].groupby('Seri').Guc_Hacim.mean().plot(kind='bar')
-    plt.title("Araba Motor Performans Değer Tablosu")
+    fig.suptitle("Araba Motor Performans Değer Tablosu",fontsize=32)
     plt.xlabel('Model')
     plt.ylabel('Araç Güç/Hacim')
     FigureCanvasAgg(fig).print_png(filename)
@@ -160,8 +170,10 @@ def plotAvgPrice():
         if time.time()-os.path.getmtime(filename) < 300:
             return
     fig = plt.figure(figsize=(32,24))
+    plt.rcParams.update({'font.size': 16})
+    plt.xticks(rotation=30)
     df[:].groupby('Seri').Fiyat.mean().plot(kind='bar')
-    plt.title("Araba modellerinin ortalama fiyatları")
+    fig.suptitle("Araba modellerinin ortalama fiyatları",fontsize=32)
     plt.xlabel('Seriler')
     plt.ylabel('Ortalama Fiyatlar')
     FigureCanvasAgg(fig).print_png(filename)
