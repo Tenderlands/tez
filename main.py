@@ -39,6 +39,8 @@ def prediction():
 
 @app.route("/istatistik")
 def statistics():
+    if not os.path.exists(os.path.join(os.getcwd(),'graphs')):
+        os.mkdir(os.path.join(os.getcwd(),'graphs'))
     plotKM_test()
     plotKM_train()
     plotYakit()
