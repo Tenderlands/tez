@@ -2,9 +2,9 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from processLibrary import *
-
-import json
-
+import time
+from matplotlib.backends.backend_agg import FigureCanvasAgg
+import os
 df = pd.read_csv('dataframe.csv')
 df.drop(['Unnamed: 0'], inplace=True, axis=1)
 df.drop(['Takas'], inplace=True, axis=1)
@@ -64,3 +64,105 @@ regressor.fit(X_train, y_train)
 model = RandomForestRegressor(n_estimators=150, random_state=0)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=1 / 5, random_state=10)
 model.fit(X_train, y_train)
+
+def plotKM_train():
+    filename = os.path.join(os.getcwd(), 'graphs', 'km_train.png')
+    if os.path.exists(filename):
+        if time.time()-os.path.getmtime(filename) < 300:
+            return
+    df1 = pd.DataFrame(X_train, dtype='float64')
+    v1 = df1.iloc[:,6].values
+    fig = plt.figure(figsize=(8,6))
+    plt.scatter(v1,y_train, color='magenta')
+    plt.title('Kilometre Değerine Göre Fiyat(Eğitim Verisi Tablosu)')
+    plt.xlabel('KM')
+    plt.ylabel('Fiyat')
+    FigureCanvasAgg(fig).print_png(filename)
+    return
+
+
+def plotKM_test():
+    filename = os.path.join(os.getcwd(), 'graphs', 'km_test.png')
+    if os.path.exists(filename):
+        if time.time()-os.path.getmtime(filename) < 300:
+            return
+    df1 = pd.DataFrame(X_test, dtype='float64')
+    v1 = df1.iloc[:,6].values
+    fig = plt.figure(figsize=(8,6))
+    plt.scatter(v1,y_test, color='blue')
+    plt.title('Kilometre Değerine Göre Fiyat(Test Verisi Tablosu)')
+    plt.xlabel('KM')
+    plt.ylabel('Fiyat')
+    FigureCanvasAgg(fig).print_png(filename)
+    return
+
+
+def plotYakit():
+    filename = os.path.join(os.getcwd(), 'graphs', 'yakit.png')
+    if os.path.exists(filename):
+        if time.time()-os.path.getmtime(filename) < 300:
+            return
+    graph = df[:]
+    fig = plt.figure(figsize=(8,6))
+    plt.title("Yakıt Çeşitlenmesi")
+    graph.groupby('Yakıt').Yakıt.count().plot(kind='pie')
+    FigureCanvasAgg(fig).print_png(filename)
+    return
+
+
+def plotAvgKM():
+    filename = os.path.join(os.getcwd(), 'graphs', 'ortalamaKM.png')
+    if os.path.exists(filename):
+        if time.time()-os.path.getmtime(filename) < 300:
+            return
+    fig = plt.figure(figsize=(8,6))
+    df[:].groupby('Marka').KM.mean().plot(kind='bar')
+    plt.title("Araba markalarına göre ortalama KM değerleri")
+    plt.xlabel('Markalar')
+    plt.ylabel('Ortalama Km\'ler')
+    FigureCanvasAgg(fig).print_png(filename)
+    return
+
+
+def plotRenk():
+    filename = os.path.join(os.getcwd(), 'graphs', 'renk.png')
+    if os.path.exists(filename):
+        if time.time()-os.path.getmtime(filename) < 300:
+            return
+    fig = plt.figure(figsize=(8,6))
+    df[:].groupby('Renk').Renk.count().plot(kind='bar')
+    plt.title("Arabaların Renk Dağılımı")
+    plt.xlabel('Renk')
+    plt.ylabel('Adet')
+    FigureCanvasAgg(fig).print_png(filename)
+    return
+
+
+def plotMotor():
+    filename = os.path.join(os.getcwd(), 'graphs', 'motor.png')
+    if os.path.exists(filename):
+        if time.time()-os.path.getmtime(filename) < 300:
+            return
+    df['Motor_Gucu'] = pd.to_numeric(df['Motor_Gucu'], downcast='integer')
+    df['Motor_Hacmi'] = pd.to_numeric(df['Motor_Hacmi'], downcast='integer')
+    df["Guc_Hacim"] = (df["Motor_Gucu"] / df["Motor_Hacmi"])
+    fig = plt.figure(figsize=(32,24))
+    df[:].groupby('Seri').Guc_Hacim.mean().plot(kind='bar')
+    plt.title("Araba Motor Performans Değer Tablosu")
+    plt.xlabel('Model')
+    plt.ylabel('Araç Güç/Hacim')
+    FigureCanvasAgg(fig).print_png(filename)
+    return
+
+def plotAvgPrice():
+    filename = os.path.join(os.getcwd(), 'graphs', 'ortalamaFiyat.png')
+    if os.path.exists(filename):
+        if time.time()-os.path.getmtime(filename) < 300:
+            return
+    fig = plt.figure(figsize=(32,24))
+    df[:].groupby('Seri').Fiyat.mean().plot(kind='bar')
+    plt.title("Araba modellerinin ortalama fiyatları")
+    plt.xlabel('Seriler')
+    plt.ylabel('Ortalama Fiyatlar')
+    FigureCanvasAgg(fig).print_png(filename)
+    return

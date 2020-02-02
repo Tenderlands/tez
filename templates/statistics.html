@@ -1,0 +1,30 @@
+{% extends 'layout.html' %}
+{% block content %}
+<fieldset class="form-group">
+    <legend class="border-bottom mb-4">İstatistikler</legend>
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-6">
+                <img class="plot" src="/graphs/km_train.png" alt="Eğitim Verisi KM dağılımı">
+            </div>
+            <div class="col-md-6">
+                <img class="plot" src="/graphs/km_test.png" alt="Test Verisi KM dağılımı">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <img class="plot" src="/graphs/yakit.png" alt="Yakıt Çeşitlenmesi">
+            </div>
+            <div class="col-md-6">
+                <img class="plot" src="/graphs/ortalamaKM.png" alt="Ortalama KM dağılımı">
+            </div>
+        </div>
+        <div class="row">
+            <img class="plot" src="/graphs/motor.png" alt="Motor Performans Dağılımı">
+        </div>
+        <div class="row">
+            <img class="plot" src="/graphs/ortalamaFiyat.png" alt="Ortalama Fiyat Dağılımı">
+        </div>
+    </div>
+</fieldset>
+{% endblock content %}

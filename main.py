@@ -1,14 +1,15 @@
-from prediction import regressor, dictionary
-from flask import Flask, render_template, url_for, flash, redirect, jsonify
+from prediction import *
+from flask import Flask, render_template, url_for, flash, redirect, jsonify, send_from_directory
 from form import PredictionForm
 from processLibrary import *
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '5791628bb0b13ce0c676dfde280ba245'
 
 
 @app.route("/", methods=['GET', 'POST'])
-def home():
+def prediction():
     form = PredictionForm()
     if form.validate_on_submit():
         prd = int(regressor.predict(
@@ -19,7 +20,7 @@ def home():
             f'Prediction for {form.Marka.data} {form.Seri.data} {form.Model.data} {form.Yil.data}, {form.Yakit.data}, \
                 {form.Vites.data} vites, {form.KM.data} KM, {form.Kasa_Tipi.data}, {form.Motor_Gucu.data} HP, \
                 {int(form.Motor_Hacmi.data)} cc, {form.Renk.data}, {form.Kimden.data} : \n\n{prd} TL', 'success')
-        return redirect(url_for('home'))
+        return redirect(url_for('prediction'))
     else:
         flash_errors(form)
     if(form.Marka.data != ""):
@@ -34,8 +35,18 @@ def home():
                 modelList.append(model)
             form.Model.choices = processChoices(modelList)
             form.Model.render_kw = {}
-    return render_template('index.html', form=form)
+    return render_template('prediction.html', form=form, title="Tahmin")
 
+@app.route("/istatistik")
+def statistics():
+    plotKM_test()
+    plotKM_train()
+    plotYakit()
+    plotRenk()
+    plotMotor()
+    plotAvgKM()
+    plotAvgPrice()
+    return render_template('statistics.html', title="İstatistik")
 
 @app.route("/marka=<marka>")
 def fill_seri(marka):
@@ -56,6 +67,10 @@ def fill_model(marka, seri):
         modelList.append(modelObj)
     return jsonify({"modeller": modelList})
 
+
+@app.route("/graphs/<filename>")
+def send_js(filename):
+    return send_from_directory('graphs', filename)
 
 def flash_errors(form):
     for field, errors in form.errors.items():
