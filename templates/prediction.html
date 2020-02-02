@@ -63,7 +63,14 @@
                                 {{ form.Kimden(class="form-control form-control-lg") }}
                             </div>
                         </div>
-
+                        <div class="row">
+                            <div class="form-group col-md-4"></div>
+                            <div class="form-group col-md-4">
+                                {{ form.Durum.label(class="form-control-label") }}
+                                {{ form.Durum(class="form-control form-control-lg") }}
+                            </div>
+                            <div class="form-group col-md-4"></div>
+                        </div>
                         <div class="form-group">
                             {{ form.Submit(class="btn btn-outline-info") }}
                         </div>

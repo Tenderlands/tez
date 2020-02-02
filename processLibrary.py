@@ -43,6 +43,11 @@ def removeDigitCC(text):
     else:
         return np.nan
 
+def flattenDurum(text):
+    if type(text) != str:
+        text = "İkinci El"
+    return " ".join(text.strip().split())
+
 
 def Translator(data):
     values = np.array(data)
@@ -52,8 +57,8 @@ def Translator(data):
     return integer_encoded, mapping
 
 
-def SampleTranslator(Marka,Seri,Model,Yıl,Yakıt,Vites,KM,Kasa_Tipi,Motor_Gucu,Motor_Hacmi,Renk,Kimden,dictionary):
-    return [[dictionary['Marka'][Marka],dictionary['Seri'][Seri],dictionary['Model'][Model],Yıl,dictionary['Yakıt'][Yakıt],dictionary['Vites'][Vites],KM,dictionary['Kasa_Tipi'][Kasa_Tipi],Motor_Gucu,Motor_Hacmi,dictionary['Renk'][Renk],dictionary['Kimden'][Kimden]]]
+def SampleTranslator(Marka,Seri,Model,Yıl,Yakıt,Vites,KM,Kasa_Tipi,Motor_Gucu,Motor_Hacmi,Renk,Kimden,Durum,dictionary):
+    return [[dictionary['Marka'][Marka],dictionary['Seri'][Seri],dictionary['Model'][Model],Yıl,dictionary['Yakıt'][Yakıt],dictionary['Vites'][Vites],KM,dictionary['Kasa_Tipi'][Kasa_Tipi],Motor_Gucu,Motor_Hacmi,dictionary['Renk'][Renk],dictionary['Kimden'][Kimden],dictionary['Arac_Durum'][Durum]]]
 
 
 def jsonifyDict(df):
@@ -64,6 +69,7 @@ def jsonifyDict(df):
     Dict['Kasa_Tipi'] = df['Kasa_Tipi'].unique().tolist()
     Dict['Renk'] = df['Renk'].unique().tolist()
     Dict['Kimden'] = df['Kimden'].unique().tolist()
+    Dict['Arac_Durum'] = df['Arac_Durum'].unique().tolist()
     for marka in df['Marka'].unique().tolist():
         Dict['Marka'][marka] = {}
         dfM = df.loc[df['Marka'] == marka]

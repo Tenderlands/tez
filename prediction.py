@@ -13,6 +13,7 @@ df.drop(['Plaka'], inplace=True, axis=1)
 df.Fiyat = df.Fiyat.apply(removeDot)
 df.Fiyat = df.Fiyat.apply(removeDigitEU)
 df.Fiyat = df.Fiyat.apply(removeDigitTL)
+df.Arac_Durum = df.Arac_Durum.apply(flattenDurum)
 df['Fiyat'] = pd.to_numeric(df['Fiyat'], downcast='integer')
 df['Yıl'] = pd.to_numeric(df['Yıl'], downcast='integer')
 df.KM = df.KM.apply(removeDot)
@@ -25,7 +26,6 @@ df.drop(df.loc[df.Motor_Gucu.isnull()].index, inplace=True)
 
 df.drop(['Cekis'], inplace=True, axis=1)
 df.drop(['Garanti'], inplace=True, axis=1)
-df.drop(['Arac_Durum'], inplace=True, axis=1)
 
 jsonifyDict(df)
 
@@ -43,9 +43,10 @@ df["Motor_Gucu_Train"] = (df["Motor_Gucu"])
 df["Motor_Hacmi_Train"] = (df["Motor_Hacmi"])
 df["Renk_Train"], dictionary["Renk"] = Translator(df["Renk"])
 df["Kimden_Train"], dictionary["Kimden"] = Translator(df["Kimden"])
+df["Arac_Durum_Train"], dictionary["Arac_Durum"] = Translator(df["Arac_Durum"])
 df['KM'] = pd.to_numeric(df['KM'], downcast='integer')
 
-X = df.iloc[:, 13:].values
+X = df.iloc[:, 14:].values
 y = df.iloc[:, 0].values
 
 from sklearn.model_selection import train_test_split

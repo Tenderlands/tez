@@ -15,7 +15,7 @@ def prediction():
         prd = int(regressor.predict(
             SampleTranslator(form.Marka.data, form.Seri.data, form.Model.data, form.Yil.data, form.Yakit.data,
                              form.Vites.data, form.KM.data, form.Kasa_Tipi.data, form.Motor_Gucu.data,
-                             form.Motor_Hacmi.data, form.Renk.data, form.Kimden.data, dictionary))[0])
+                             form.Motor_Hacmi.data, form.Renk.data, form.Kimden.data,form.Durum.data, dictionary))[0])
         flash(
             f'Prediction for {form.Marka.data} {form.Seri.data} {form.Model.data} {form.Yil.data}, {form.Yakit.data}, \
                 {form.Vites.data} vites, {form.KM.data} KM, {form.Kasa_Tipi.data}, {form.Motor_Gucu.data} HP, \
@@ -46,7 +46,8 @@ def statistics():
     plotMotor()
     plotAvgKM()
     plotAvgPrice()
-    return render_template('statistics.html', title="İstatistik")
+    accuracy = str(regressor.score(X_test,y_test)*100)
+    return render_template('statistics.html', title="İstatistik", accuracy=accuracy)
 
 @app.route("/marka=<marka>")
 def fill_seri(marka):
@@ -71,6 +72,7 @@ def fill_model(marka, seri):
 @app.route("/graphs/<filename>")
 def send_js(filename):
     return send_from_directory('graphs', filename)
+
 
 def flash_errors(form):
     for field, errors in form.errors.items():
