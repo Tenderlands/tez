@@ -17,9 +17,10 @@ def prediction():
                              form.Vites.data, form.KM.data, form.Kasa_Tipi.data, form.Motor_Gucu.data,
                              form.Motor_Hacmi.data, form.Renk.data, form.Kimden.data,form.Durum.data, dictionary))[0])
         flash(
-            f'Prediction for {form.Marka.data} {form.Seri.data} {form.Model.data} {form.Yil.data}, {form.Yakit.data}, \
+            f'{form.Marka.data} {form.Seri.data} {form.Model.data} {form.Yil.data}, {form.Yakit.data}, \
                 {form.Vites.data} vites, {form.KM.data} KM, {form.Kasa_Tipi.data}, {form.Motor_Gucu.data} HP, \
-                {int(form.Motor_Hacmi.data)} cc, {form.Renk.data}, {form.Kimden.data} : \n\n{prd} TL', 'success')
+                {int(form.Motor_Hacmi.data)} cc, {form.Renk.data}, {form.Kimden.data} için öngörülen fiyat: \n\n{prd} \
+                 TL', 'success')
         return redirect(url_for('prediction'))
     else:
         flash_errors(form)
@@ -37,6 +38,7 @@ def prediction():
             form.Model.render_kw = {}
     return render_template('prediction.html', form=form, title="Tahmin")
 
+
 @app.route("/istatistik")
 def statistics():
     if not os.path.exists(os.path.join(os.getcwd(),'graphs')):
@@ -50,6 +52,7 @@ def statistics():
     plotAvgPrice()
     accuracy = str(regressor.score(X_test,y_test)*100)
     return render_template('statistics.html', title="İstatistik", accuracy=accuracy)
+
 
 @app.route("/marka=<marka>")
 def fill_seri(marka):
@@ -83,6 +86,7 @@ def flash_errors(form):
                 getattr(form, field).label.text,
                 error
             ), 'warning')
+
 
 if __name__ == '__main__':
     app.run(debug=True)

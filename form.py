@@ -42,4 +42,4 @@ class PredictionForm(FlaskForm):
     Renk = SelectField(u'Renk', choices=processChoices(Dict['Renk']), validators=[DataRequired()])
     Kimden = SelectField(u'Kimden', choices=processChoices(Dict['Kimden']), validators=[DataRequired()])
     Durum = SelectField(u'Araç Durum',choices=processChoices(Dict['Arac_Durum']), validators=[DataRequired()])
-    Submit = SubmitField('Predict')
+    Submit = SubmitField('Fiyat Tahmini')

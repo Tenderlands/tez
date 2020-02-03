@@ -30,7 +30,6 @@ df.Motor_Hacmi = df.Motor_Hacmi.apply(removeDigitCC)
 df.drop(df.loc[df.Motor_Hacmi.isnull()].index, inplace=True)
 df.drop(df.loc[df.Motor_Gucu.isnull()].index, inplace=True)
 
-
 jsonifyDict(df)
 dictionary = {}
 
