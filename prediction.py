@@ -11,7 +11,7 @@ df.drop(['Takas'], inplace=True, axis=1)
 df.drop(['Plaka'], inplace=True, axis=1)
 
 df.Fiyat = df.Fiyat.apply(removeDot)
-df.Fiyat = df.Fiyat.apply(removeDigitEU)
+df.Fiyat = df.Fiyat.apply(removeDigitEUAndUSD)
 df.Fiyat = df.Fiyat.apply(removeDigitTL)
 df.Arac_Durum = df.Arac_Durum.apply(flattenDurum)
 df['Fiyat'] = pd.to_numeric(df['Fiyat'], downcast='integer')

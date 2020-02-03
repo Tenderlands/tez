@@ -11,11 +11,16 @@ def removeDigitTL(text):
     return text.replace(" TL", "")
 
 
-def removeDigitEU(text):
+def removeDigitEUAndUSD(text):
     if '€' in text:
         text = text.replace("€", "").strip()
         sayi = int(text)
-        sayi = sayi * 6.5
+        sayi = sayi * 6.6
+        text = str(sayi)
+    if '$' in text:
+        text = text.replace("$", "").strip()
+        sayi = int(text)
+        sayi = sayi * 6
         text = str(sayi)
     return text
 
