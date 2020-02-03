@@ -1,6 +1,5 @@
 import requests
 from bs4 import BeautifulSoup
-import pandas as pd
 import time
 from datetime import datetime
 import os
@@ -19,17 +18,9 @@ headers.update({
     'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:52.0) Gecko/20100101 Firefox/52.0',
 })
 
-att = ['Fiyat', 'Marka', 'Seri', 'Model', 'Yıl', 'Yakıt', 'Vites', 'KM', 'Kasa_Tipi', 'Motor_Gucu', 'Motor_Hacmi',
-       'Cekis', 'Renk', 'Garanti', 'Hasar_Durumu', 'Plaka', 'Kimden', 'Takas', 'Arac_Durum']
-
-df = pd.DataFrame(columns=att)
-
 brands = ['fiat', 'ford', 'honda', 'hyundai', 'renault', 'toyota', 'opel', 'volkswagen', 'peugeot']
 
 url_base = 'https://www.sahibinden.com'
-#url = url_base + '/otomobil'
-#link = requests.get(url, headers=headers)
-#content = BeautifulSoup(link.content, 'lxml')
 datestr = datetime.now().strftime("%H.%M--%m-%d-%Y")
 for brand in brands:
 
@@ -52,7 +43,7 @@ for brand in brands:
     number = number_to_int(span.text)
     offset = 0
     print(number)
-    while offset < 100:
+    while offset < 1500:
         url = url_base + '/' + brand + '?pagingOffset=' + str(offset) + '&pagingSize=50'
         try:
             link = requests.get(url, headers=headers)
@@ -66,7 +57,6 @@ for brand in brands:
             lstr = url_base + l['href'] + '\n'
             f.write(lstr)
         offset += 50
-        #print(str(number) + ' adet ilanın ' +str(offset) + ' tanesi kaydedildi')
         print('Total Number: ' + str(number) + '  Offset: ' + str(offset))
         time.sleep(0.7)
     f.close()

@@ -5,11 +5,17 @@ from processLibrary import *
 import time
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 import os
+
 df = pd.read_csv('dataframe.csv')
+
+# Kullanılmayan kolonların çıkarılması
 df.drop(['Unnamed: 0'], inplace=True, axis=1)
 df.drop(['Takas'], inplace=True, axis=1)
 df.drop(['Plaka'], inplace=True, axis=1)
+df.drop(['Cekis'], inplace=True, axis=1)
+df.drop(['Garanti'], inplace=True, axis=1)
 
+# Verinin işlemeye uygun hale getirilmesi
 df.Fiyat = df.Fiyat.apply(removeDot)
 df.Fiyat = df.Fiyat.apply(removeDigitEUAndUSD)
 df.Fiyat = df.Fiyat.apply(removeDigitTL)
@@ -24,13 +30,12 @@ df.Motor_Hacmi = df.Motor_Hacmi.apply(removeDigitCC)
 df.drop(df.loc[df.Motor_Hacmi.isnull()].index, inplace=True)
 df.drop(df.loc[df.Motor_Gucu.isnull()].index, inplace=True)
 
-df.drop(['Cekis'], inplace=True, axis=1)
-df.drop(['Garanti'], inplace=True, axis=1)
 
 jsonifyDict(df)
-
 dictionary = {}
 
+
+# Verinin LabelEncoder ile ön-işlenmesi
 df["Marka_Train"], dictionary["Marka"] = Translator(df["Marka"])
 df["Seri_Train"], dictionary["Seri"] = Translator(df["Seri"])
 df["Model_Train"], dictionary["Model"] = Translator(df["Model"])
@@ -46,25 +51,23 @@ df["Kimden_Train"], dictionary["Kimden"] = Translator(df["Kimden"])
 df["Arac_Durum_Train"], dictionary["Arac_Durum"] = Translator(df["Arac_Durum"])
 df['KM'] = pd.to_numeric(df['KM'], downcast='integer')
 
+# Değişken olarak kullanılacak değerlerin, ve Fiyatın alınması
 X = df.iloc[:, 14:].values
 y = df.iloc[:, 0].values
 
+# Eğitim ve Test Verisinin ayrılması
 from sklearn.model_selection import train_test_split
-
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=1 / 5, random_state=10)
 
+# Modelin oluşturulması ve eğitilmesi
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.model_selection import cross_val_score
-from sklearn import model_selection
-from sklearn import metrics
-from sklearn import linear_model
-from sklearn.model_selection import cross_val_predict
-
 regressor = RandomForestRegressor(n_estimators=10, random_state=10)
 regressor.fit(X_train, y_train)
-model = RandomForestRegressor(n_estimators=150, random_state=0)
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=1 / 5, random_state=10)
-model.fit(X_train, y_train)
+
+
+#model = RandomForestRegressor(n_estimators=150, random_state=0)
+#X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=1 / 5, random_state=10)
+#model.fit(X_train, y_train)
 
 
 def plotKM_train():
